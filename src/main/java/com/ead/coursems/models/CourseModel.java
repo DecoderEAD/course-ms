@@ -4,14 +4,17 @@ import com.ead.coursems.enums.CourseLevelEnum;
 import com.ead.coursems.enums.CourseStatusEnum;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Set;
 import java.util.UUID;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
+import static com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY;
 
 @Data
 @JsonInclude(NON_NULL)
@@ -51,5 +54,9 @@ public class CourseModel implements Serializable {
 
     @Column(nullable = false)
     private UUID userInstructor;
+
+    @JsonProperty(access = WRITE_ONLY)
+    @OneToMany(mappedBy = "course")
+    private Set<ModuleModel> modules;
 
 }
