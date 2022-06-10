@@ -12,6 +12,7 @@ import java.util.UUID;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 import static com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY;
+import static javax.persistence.FetchType.LAZY;
 
 @Data
 @JsonInclude(NON_NULL)
@@ -38,6 +39,6 @@ public class LessonModel implements Serializable {
     private LocalDateTime creationDate;
 
     @JsonProperty(access = WRITE_ONLY)
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = LAZY)
     private ModuleModel module;
 }
