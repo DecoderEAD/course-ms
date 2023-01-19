@@ -1,5 +1,6 @@
 package com.ead.coursems.clients;
 
+import com.ead.coursems.dto.CourseUserDTO;
 import com.ead.coursems.dto.ResponsePageDTO;
 import com.ead.coursems.dto.UserDTO;
 import com.ead.coursems.services.UtilsService;
@@ -20,7 +21,7 @@ import java.util.UUID;
 @Log4j2
 @Component
 @RequiredArgsConstructor
-public class CourseClient {
+public class AuthUserClient {
 
     private final RestTemplate restTemplate;
 
@@ -42,5 +43,18 @@ public class CourseClient {
         }
         log.info("Ending request /users courseId {} ", courseId);
         return result.getBody();
+    }
+
+    public ResponseEntity<UserDTO> getOneUserById(UUID userId) {
+        var url = utilsService.createUrlGetOneUserById(userId);
+        return restTemplate.exchange(url, HttpMethod.GET, null, UserDTO.class);
+    }
+
+    public void postSubscriptionUserInCourse(UUID courseId, UUID userId) {
+        var url = utilsService.createUrlPostSubscriptionUserInCourse(userId);
+        var courseUserDTO = new CourseUserDTO();
+        courseUserDTO.setUserId(userId);
+        courseUserDTO.setCourseId(courseId);
+        restTemplate.postForObject(url, courseUserDTO, String.class);
     }
 }

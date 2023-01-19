@@ -1,7 +1,9 @@
 package com.ead.coursems.models;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
@@ -11,6 +13,8 @@ import java.util.UUID;
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @JsonInclude(NON_NULL)
 @Entity
 @Table(name = "TB_COURSES_USERS")

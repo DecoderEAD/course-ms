@@ -16,3 +16,15 @@ spring:
       hibernate:
         show_sql: true
     database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+logging:
+  level:
+    com.ead: TRACE
+    root: INFO
+    org.springframework.web: DEBUG
+    org.hibernate: INFO
+
+ead:
+  api:
+    url:
+      auth-user: 'http://localhost:8087'
