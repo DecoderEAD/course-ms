@@ -4,6 +4,7 @@ import com.ead.coursems.models.CourseModel;
 import com.ead.coursems.models.LessonModel;
 import com.ead.coursems.models.ModuleModel;
 import com.ead.coursems.repositories.CourseRepository;
+import com.ead.coursems.repositories.CourseUserRepository;
 import com.ead.coursems.repositories.LessonRepository;
 import com.ead.coursems.repositories.ModuleRepository;
 import com.ead.coursems.services.CourseService;
@@ -27,6 +28,8 @@ public class CourseServiceImpl implements CourseService {
 
     private final LessonRepository lessonRepository;
 
+    private final CourseUserRepository courseUserRepository;
+
     @Transactional
     @Override
     public void delete(CourseModel courseModel) {
@@ -39,6 +42,10 @@ public class CourseServiceImpl implements CourseService {
                 }
             }
             moduleRepository.deleteAll(moduleModelList);
+        }
+        var courseUserModelList = courseUserRepository.findAllCourseUserIntoCourse(courseModel.getCourseId());
+        if(!courseUserModelList.isEmpty()) {
+            courseUserRepository.deleteAll(courseUserModelList);
         }
         courseRepository.delete(courseModel);
     }
