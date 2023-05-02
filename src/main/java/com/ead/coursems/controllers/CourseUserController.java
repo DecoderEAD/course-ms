@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpStatusCodeException;
 
 import javax.validation.Valid;
+import javax.ws.rs.Path;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
@@ -32,8 +33,12 @@ public class CourseUserController {
     private final CourseUserService courseUserService;
 
     @GetMapping("/courses/{courseId}/users")
-    public ResponseEntity<Page<UserDTO>> getAllUsersByCourse(@PageableDefault(page = 0, size = 10, sort = "userId", direction = Sort.Direction.ASC) Pageable pageable,
+    public ResponseEntity<Object> getAllUsersByCourse(@PageableDefault(page = 0, size = 10, sort = "userId", direction = Sort.Direction.ASC) Pageable pageable,
                                                              @PathVariable(value = "courseId") UUID courseId) {
+        Optional<CourseModel> courseModelOptional = courseService.findById(courseId);
+        if (!courseModelOptional.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Course not found.");
+        }
         return ResponseEntity.status(HttpStatus.OK).body(authUserClient.getAllUsersByCourses(pageable, courseId));
     }
 
@@ -61,5 +66,14 @@ public class CourseUserController {
         }
         var courseModel = courseUserService.saveAndSendSubscriptionUserInCourse(courseModelOptional.get().convertToCourseUserModel(subscriptionDTO.getUserId()));
         return ResponseEntity.status(HttpStatus.CREATED).body(courseModel);
+    }
+
+    @DeleteMapping("/courses/users/{userId}")
+    public ResponseEntity<Object> deleteCourseUserByUser(@PathVariable(value = "userId") UUID userId) {
+        if(!courseUserService.existsByUserId(userId)) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("CourseUser not found.");
+        }
+        courseUserService.deleteCourseUserByUser(userId);
+        return ResponseEntity.status(HttpStatus.OK).body("CourseUser deleted successfully.");
     }
 }
